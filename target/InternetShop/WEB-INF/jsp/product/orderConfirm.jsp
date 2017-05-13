@@ -12,17 +12,16 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h3>${con.name}</h3>
-                        <h4>${con.cost}$ * ${con.amount}</h4>
+                        <h4>${con.cost}$ X ${con.amount}</h4>
                     </div>
                     <div class="col-md-4">
                         <button type="submit">Delete</button>
                     </div>
                 </div>
             </div>
-
-
-
         </sf:form>
         <hr>
     </c:forEach>
+
+    <a href="/order_confirmed">Ok</a>
 </t:mainLayout>

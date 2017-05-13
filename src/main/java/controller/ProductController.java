@@ -2,12 +2,11 @@ package controller;
 
 import form.OrderConfirmationForm;
 import form.ProductForm;
-import model.Product;
-import model.ProductsOnWarehouses;
+import model.*;
+import model.enums.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,11 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pojo.Confirmation;
 import pojo.ProductCounter;
+import service.OrderService;
+import service.ProductInOrderService;
 import service.ProductService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Andrey on 28.04.2017.
@@ -31,6 +33,12 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    ProductInOrderService productInOrderService;
 
     @RequestMapping(value = "/product")
     public String getProductPage(Model model, @RequestParam long id){
@@ -99,5 +107,24 @@ public class ProductController {
         cart.remove(deletedNum);
         request.getSession().setAttribute("shoppingCart", cart);
         return "redirect:/confirm_order";
+    }
+
+    @RequestMapping(value = "/order_confirmed")
+    public String confirm(HttpServletRequest request){
+        ArrayList<ProductCounter> cart = (ArrayList<ProductCounter>)request.getSession().getAttribute("shoppingCart");
+        User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Order order = new Order();
+        order.setUser(currentUser);
+        order.setStatus(OrderStatus.ORDER_SET);
+        order = orderService.saveNewOrder(order);
+        for (ProductCounter pc : cart){
+            ProductInOrder productInOrder = new ProductInOrder();
+            productInOrder.setAmount(pc.getAmount());
+            productInOrder.setOrder(order);
+            productInOrder.setProduct(productService.findOneById(pc.getProdId()));
+            productInOrderService.saveNewProductInOrder(productInOrder);
+        }
+        request.getSession().setAttribute("shoppingCart", null);
+        return "redirect:/";
     }
 }

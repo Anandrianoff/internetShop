@@ -15,11 +15,11 @@ public class ProductInOrder {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "productId", insertable=false, updatable=false)
+    @JoinColumn(name = "productId")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "orderId", insertable=false, updatable=false)
+    @JoinColumn(name = "orderId")
     private Order order;
 
     private int amount;
