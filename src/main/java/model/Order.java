@@ -1,6 +1,7 @@
 package model;
 
 import model.enums.OrderStatus;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "orders")
+@Proxy(lazy = false)
 public class Order {
 
     @Id

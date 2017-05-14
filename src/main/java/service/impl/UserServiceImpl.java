@@ -18,8 +18,21 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 
     @Override
-    public void saveNewUser(UserRegistrationForm form) {
+    public User saveNewUser(UserRegistrationForm form) {
         User user = UserRegistrationFormToUser.transform(form);
-        userRepository.save(user);
+        user = userRepository.save(user);
+        return user;
     }
+
+    @Override
+    public User confirmUser(long id, String token) {
+        User currenUser = userRepository.findOneById(id);
+        if(currenUser.getPassword().equals(token)){
+            currenUser.setEmailConfirmed(true);
+            userRepository.save(currenUser);
+        }
+        return currenUser;
+    }
+
+
 }

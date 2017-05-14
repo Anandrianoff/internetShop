@@ -28,6 +28,9 @@
                                 <a href="/confirm_order">Buy</a>
                             <% } %>
                         </li>
+                        <li>
+                            <a href="/myOrders">My orders</a>
+                        </li>
                     </security:authorize>
                     <security:authorize access="hasRole('ROLE_ADMIN')">
                         <li>

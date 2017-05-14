@@ -2,8 +2,13 @@ package controller;
 
 import form.UserLoginForm;
 import form.UserRegistrationForm;
+import model.Order;
+import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,9 +17,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.OrderService;
+import service.ProductInOrderService;
 import service.UserService;
+import util.EMailer;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by Andrey on 23.04.2017.
@@ -24,6 +33,12 @@ public class AccountController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    ProductInOrderService productInOrderService;
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     @PreAuthorize("isAnonymous()")
@@ -36,12 +51,25 @@ public class AccountController {
     @PreAuthorize("isAnonymous()")
     public String register(@ModelAttribute("userform") @Valid UserRegistrationForm form, BindingResult res){
         if(!res.hasErrors()){
-            userService.saveNewUser(form);
+            User user = userService.saveNewUser(form);
+            ApplicationContext context =
+                    new ClassPathXmlApplicationContext("Spring-Mail.xml");
+            EMailer eMailer = (EMailer) context.getBean("EMailer");
+            //Надо сделать какой-то токен для подтвержения, но я сделаю чуть иначе, хотя понимаю, что так лучше не надо
+            eMailer.sendMail("hikkas.from.506@gmail.com", form.getEmail(),
+                    "Confirm your registration",
+                    "http://localhost:8080/acc_confirm/?id=" + user.getId() + "&token=" + user.getPassword());
             return "redirect:/";
         }else {
             //TODO: Обработка неправильного ввода
             return "redirect:/register";
         }
+    }
+
+    @RequestMapping(value = "/acc_confirm")
+    public  String confirm(@RequestParam long id, @RequestParam String token){
+        userService.confirmUser(id, token);
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -58,5 +86,14 @@ public class AccountController {
     @PreAuthorize("isAnonymous()")
     public String login(@ModelAttribute("userform") UserLoginForm form){
         return "";
+    }
+
+    @RequestMapping(value = "/myOrders", method = RequestMethod.GET)
+    public String getAllOrdersPage(Model model){
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Order> orders = orderService.getAllOrdersByUser(currentUser.getId());
+
+        model.addAttribute("orders", orders);
+        return "Account/myOrders";
     }
 }

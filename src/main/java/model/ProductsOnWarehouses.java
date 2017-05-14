@@ -1,5 +1,7 @@
 package model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 
 /**
@@ -8,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "products_on_warehouse")
+@Proxy(lazy = false)
 public class ProductsOnWarehouses {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

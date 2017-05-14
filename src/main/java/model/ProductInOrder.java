@@ -1,5 +1,7 @@
 package model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 
 /**
@@ -8,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "ProductInOrder")
+@Proxy(lazy = false)
 public class ProductInOrder {
 
     @Id

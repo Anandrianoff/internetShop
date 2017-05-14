@@ -11,6 +11,8 @@ import repository.ProductInOrderRepository;
 import repository.ProductOnWarehousesRepository;
 import service.OrderService;
 
+import java.util.List;
+
 /**
  * Created by Andrey on 13.05.2017.
  */
@@ -30,5 +32,11 @@ public class OrderServiceImpl implements OrderService {
     public Order saveNewOrder(Order order) {
         order = orderRepository.save(order);
         return order;
+    }
+
+    @Override
+    public List<Order> getAllOrdersByUser(long userId) {
+        List<Order> orders = orderRepository.findAllByUserId(userId);
+        return orders;
     }
 }

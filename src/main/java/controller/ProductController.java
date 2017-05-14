@@ -127,4 +127,29 @@ public class ProductController {
         request.getSession().setAttribute("shoppingCart", null);
         return "redirect:/";
     }
+
+    @RequestMapping(value = "/cart/change"/*, method = RequestMethod.POST*/)
+    @ResponseBody
+    public String changeAmount(@RequestParam String action, @RequestParam long id, HttpServletRequest request){
+        ArrayList<ProductCounter> cart = (ArrayList<ProductCounter>)request.getSession().getAttribute("shoppingCart");
+        int count = 0;
+        for(ProductCounter pc : cart){
+            if(pc.getProdId() == id){
+                count = pc.getAmount();
+                if(action.equals("+")){
+                    count +=1;
+                    pc.setAmount(count);
+                }else {
+                    if(pc.getAmount() > 1){
+                        count -= 1;
+                        pc.setAmount(count);
+                    }
+                }
+            }
+        }
+        request.getSession().setAttribute("shoppingCart", cart);
+        return Integer.toString(count);
+    }
+
+
 }
