@@ -8,6 +8,8 @@ import repository.UserRepository;
 import service.UserService;
 import util.UserRegistrationFormToUser;
 
+import java.util.List;
+
 /**
  * Created by Andrey on 23.04.2017.
  */
@@ -32,6 +34,16 @@ public class UserServiceImpl implements UserService{
             userRepository.save(currenUser);
         }
         return currenUser;
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void removeUser(long userId) {
+        userRepository.delete(userId);
     }
 
 

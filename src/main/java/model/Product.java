@@ -24,15 +24,15 @@ public class Product {
     private String description;
     private int price;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "productId")
     private Set<ProductInOrder> productInOrders;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "productId")
     private Set<ProductsOnWarehouses> productsOnWarehouses = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "productId")
     public Set<ProductInOrder> getProductInOrders() {
         return productInOrders;
@@ -42,7 +42,7 @@ public class Product {
         this.productInOrders = productInOrders;
     }
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "productId")
     public Set<ProductsOnWarehouses> getProductsOnWarehouses() {
         return productsOnWarehouses;

@@ -26,6 +26,7 @@
                     <security:authorize access="hasRole('ROLE_ANONYMOUS')">
                         <a href="/login">Log in</a>
                     </security:authorize>
+                    <label id="error"></label>
                 </sf:form>
             </div>
         </div>
@@ -39,7 +40,14 @@
                 type: "POST",
                 data: jQuery("#form").serialize(),
                 success: function (response) {
-                    document.getElementById("shoppingCart").innerHTML = response;
+                    if(response == 'We do not have enough products'){
+                        document.getElementById("error").innerHTML = 'We do not have enough products';
+                    }else {
+                        document.getElementById("shoppingCart").innerHTML = response;
+                    }
+                },
+                error: function () {
+                    document.getElementById("error").innerHTML = 'We do not have enough products';
                 }
             })
             

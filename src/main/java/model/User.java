@@ -30,11 +30,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRoles role;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
     private Set<Order> orders = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
     public Set<Order> getOrders() {
         return orders;

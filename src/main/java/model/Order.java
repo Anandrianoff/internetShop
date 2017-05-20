@@ -27,7 +27,7 @@ public class Order {
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "orderId")
     public Set<ProductInOrder> getProductInOrders() {
         return productInOrders;
@@ -37,7 +37,7 @@ public class Order {
         this.productInOrders = productInOrders;
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "orderId")
     private Set<ProductInOrder> productInOrders;
 

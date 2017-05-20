@@ -10,4 +10,5 @@ import java.util.List;
 public interface OrderService {
     Order saveNewOrder(Order order);
     List<Order> getAllOrdersByUser(long userid);
+    List<Order> getAllOrders();
 }

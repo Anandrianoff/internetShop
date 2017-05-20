@@ -59,4 +59,14 @@ public class ProductServiceImpl implements ProductService {
     public Product findOneById(long id) {
         return productsRepository.findOneById(id);
     }
+
+    @Override
+    public int getAllProductsAmountByProdId(long id) {
+        Product p = productsRepository.getOne(id);
+        int amount = 0;
+        for (ProductsOnWarehouses piv: p.getProductsOnWarehouses()) {
+            amount += piv.getAmount();
+        }
+        return amount;
+    }
 }

@@ -2,18 +2,30 @@ package controller;
 
 import form.AddProductForm;
 import form.AddWarehouseForm;
+import form.RemoveUserForm;
+import model.Order;
+import model.User;
+import model.enums.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.Banner;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import service.OrderService;
 import service.ProductService;
+import service.UserService;
 import service.impl.WarehouseService;
 import util.AddWarehouseFormToWarehouse;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -27,6 +39,12 @@ public class AdminController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    OrderService orderService;
 
     @RequestMapping(value = "admin/addProduct", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -68,5 +86,35 @@ public class AdminController {
             //TODO: Обработка неправильного ввода
             return "redirect:/admin/warehouses";
         }
+    }
+
+    @RequestMapping(value = "/admin/users")
+    public String getUserAdminPage(Model model, HttpServletRequest request){
+        model.addAttribute("token", new HttpSessionCsrfTokenRepository().loadToken(request).toString());
+        model.addAttribute("users", userService.getAllUsers());
+        return "admin/users";
+    }
+
+    @RequestMapping(value = "/admin/removeUser", method = RequestMethod.POST)
+    public String removeUser(@RequestParam long id){
+        if(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId() != id){
+            userService.removeUser(id);
+        }
+        return "redirect:/admin/users";
+    }
+
+    @RequestMapping(value = "/admin/orders", method = RequestMethod.GET)
+    public String getOrdersPage(Model model, HttpServletRequest request){
+        model.addAttribute("orders", orderService.getAllOrders());
+        model.addAttribute("statuses", OrderStatus.values());
+        model.addAttribute("order", new Order());
+        model.addAttribute("token", new HttpSessionCsrfTokenRepository().loadToken(request).toString());
+        return "admin/orders";
+    }
+
+    @RequestMapping(value = "/admin/changeStatus", method = RequestMethod.POST)
+    public String removeOrder(Model model, @RequestParam String order, @RequestParam String status){
+
+        return "redirect:/admin/orders";
     }
 }

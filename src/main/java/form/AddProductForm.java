@@ -1,6 +1,7 @@
 package form;
 
 import model.Warehouse;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.List;
@@ -10,15 +11,15 @@ import java.util.List;
  */
 public class AddProductForm {
 
-//    @NotEmpty
+//    @NotBlank
     private String productName;
-//    @NotEmpty
+//    @NotBlank
     private long warehouse;
-//    @NotEmpty
+//    @NotBlank
     private String description;
-//    @NotEmpty
+//    @NotBlank
     private int cost;
-//    @NotEmpty
+//    @NotBlank
     private int amount;
 
     public List<Warehouse> getWarehouses() {

@@ -1,5 +1,6 @@
 package model;
 
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class ProductsOnWarehouses {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Check(constraints = "amount>=0")
     private int amount;
 
     @ManyToOne

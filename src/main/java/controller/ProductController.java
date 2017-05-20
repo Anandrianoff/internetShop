@@ -60,6 +60,9 @@ public class ProductController {
     @ResponseBody
     public String addProduct(@ModelAttribute("product")ProductForm form, BindingResult res, Model model, HttpServletRequest request){
 //        TODO:Проверку на авторизованного пользователя
+        if(form.getAmount() > productService.getAllProductsAmountByProdId(form.getProdId())){
+            return "We do not have enough products";
+        }
         if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null){
             return "redirect:/login";
         }
@@ -72,6 +75,7 @@ public class ProductController {
         //добавить класс, соотносящий айдишник и количество товара
         cart.add(new ProductCounter(form.getAmount(), form.getProdId()));
         request.getSession().setAttribute("shoppingCart", cart);
+
         return "In your cart " + cart.size() + " products  <a href=\"/confirm_order\">Buy</a>";
     }
 
@@ -132,15 +136,16 @@ public class ProductController {
     @ResponseBody
     public String changeAmount(@RequestParam String action, @RequestParam long id, HttpServletRequest request){
         ArrayList<ProductCounter> cart = (ArrayList<ProductCounter>)request.getSession().getAttribute("shoppingCart");
+        int maxAmount = productService.getAllProductsAmountByProdId(id);
         int count = 0;
         for(ProductCounter pc : cart){
             if(pc.getProdId() == id){
                 count = pc.getAmount();
-                if(action.equals("+")){
+                if(action.equals("+") && count + 1 <= maxAmount){
                     count +=1;
                     pc.setAmount(count);
                 }else {
-                    if(pc.getAmount() > 1){
+                    if(action.equals("-") && pc.getAmount() > 1){
                         count -= 1;
                         pc.setAmount(count);
                     }

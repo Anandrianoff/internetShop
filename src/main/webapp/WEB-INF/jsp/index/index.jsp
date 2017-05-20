@@ -8,7 +8,9 @@
 
     <security:authorize access="hasRole('ROLE_ADMIN')">
         <a href="admin/addProduct">Add product</a><br>
-        <a href="admin/warehouses">Add warehouse</a>
+        <a href="admin/warehouses">Add warehouse</a><br>
+        <a href="/admin/users">Users</a><br>
+        <a href="/admin/orders">Orders</a>
     </security:authorize>
     <c:forEach items="${products}" var="product">
         <div style="margin: 5px; background-color: inherit">
