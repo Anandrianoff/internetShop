@@ -108,13 +108,13 @@ public class AdminController {
         model.addAttribute("orders", orderService.getAllOrders());
         model.addAttribute("statuses", OrderStatus.values());
         model.addAttribute("order", new Order());
-        model.addAttribute("token", new HttpSessionCsrfTokenRepository().loadToken(request).toString());
+        model.addAttribute("_csrf", new HttpSessionCsrfTokenRepository().loadToken(request));
         return "admin/orders";
     }
 
     @RequestMapping(value = "/admin/changeStatus", method = RequestMethod.POST)
-    public String removeOrder(Model model, @RequestParam String order, @RequestParam String status){
-
+    public String removeOrder(Model model, @RequestParam long order, @RequestParam OrderStatus status){
+        orderService.changeStatus(order, status);
         return "redirect:/admin/orders";
     }
 }

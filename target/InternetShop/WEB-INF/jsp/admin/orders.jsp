@@ -20,29 +20,29 @@
         <tbody>
             <c:forEach items="${orders}" var="o">
                 <tr>
-                    <sf:form action="/admin/changeStatus" method="post" id="form${o.id}" modelAttribute="order">
-                        <td>${o.id}</td>
-                        <td>${o.user.id}</td>
-                        <td><sf:select path="status" id="select${o.id}">
-                            <sf:options items="${statuses}"></sf:options>
-                        </sf:select></td>
-                        <td><ol>
-                            <c:forEach items="${o.productInOrders}" var="pio">
-                                <li>${pio.product.name} - ${pio.product.price}$ X ${pio.amount}</li>
+                    <form method="post" action="/admin/changeStatus">
+                    <td>${o.id}</td>
+                    <td>${o.user.id}</td>
+                    <td>
+                        <select id="status${o.id}" name="status">
+                            <c:forEach items="${statuses}" var="st">
+                                <option>${st.toString()}</option>
                             </c:forEach>
-                        </ol></td>
-                        <td><button onclick="change('${o.id}', '#status${o.id}' )">Save</button> </td>
-                        <td>${o.status}</td>
-                    </sf:form>
+                        </select></td>
+                    <td><ol>
+                        <c:forEach items="${o.productInOrders}" var="pio">
+                            <li>${pio.product.name} - ${pio.product.price}$ X ${pio.amount}</li>
+                        </c:forEach>
+                    </ol></td>
+                    <td>
+
+                        <input type="hidden" name="order" value="${o.id}">
+                        <input type="hidden" name="<c:out value="${_csrf.parameterName}"/>" value="<c:out value="${_csrf.token}"/>">
+                        <button onclick="submit">Save</button> </td>
+                    <td>${o.status}</td>
+                    </form>
                 </tr>
             </c:forEach>
         </tbody>
     </table>
-
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js"></script>
-    <script type="text/javascript">
-        function change(order,status) {
-            $.post('/admin/changeStatus', {'order':order, 'status':status })
-        }
-    </script>
 </t:mainLayout>

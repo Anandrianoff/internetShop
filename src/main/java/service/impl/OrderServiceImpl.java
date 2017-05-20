@@ -3,6 +3,7 @@ package service.impl;
 import model.Order;
 import model.ProductInOrder;
 import model.ProductsOnWarehouses;
+import model.enums.OrderStatus;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,5 +44,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+    @Override
+    public void changeStatus(long id, OrderStatus status) {
+        Order o = orderRepository.getOne(id);
+        o.setStatus(status);
+        orderRepository.save(o);
     }
 }
