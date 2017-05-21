@@ -103,6 +103,12 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    @RequestMapping(value = "/admin/changeConfirmation")
+    public String changeConfirmation(@RequestParam long id){
+        userService.changeUserConfirmatiion(id);
+        return "redirect:/admin/users";
+    }
+
     @RequestMapping(value = "/admin/orders", method = RequestMethod.GET)
     public String getOrdersPage(Model model, HttpServletRequest request){
         model.addAttribute("orders", orderService.getAllOrders());
@@ -113,7 +119,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/changeStatus", method = RequestMethod.POST)
-    public String removeOrder(Model model, @RequestParam long order, @RequestParam OrderStatus status){
+    public String changeConfirmation(Model model, @RequestParam long order, @RequestParam OrderStatus status){
         orderService.changeStatus(order, status);
         return "redirect:/admin/orders";
     }

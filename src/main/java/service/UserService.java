@@ -17,4 +17,6 @@ public interface UserService {
     List<User> getAllUsers();
 
     void removeUser(long userId);
+
+    void changeUserConfirmatiion(long userId);
 }

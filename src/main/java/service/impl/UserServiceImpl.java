@@ -46,5 +46,12 @@ public class UserServiceImpl implements UserService{
         userRepository.delete(userId);
     }
 
+    @Override
+    public void changeUserConfirmatiion(long userId) {
+        User user = userRepository.getOne(userId);
+        user.setEmailConfirmed(!user.isEmailConfirmed());
+        userRepository.save(user);
+    }
+
 
 }

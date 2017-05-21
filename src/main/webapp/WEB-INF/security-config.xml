@@ -8,19 +8,20 @@
                  http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
     <http use-expressions="true" auto-config="true">
-        <intercept-url pattern="/**" access="permitAll"/>
-        <!--<intercept-url pattern="/index*" access="ROLE_USER,ROLE_ANONYMOUS"/>-->
+        <!--<intercept-url pattern="/**" access="permitAll"/>-->
+        <intercept-url pattern="/myOrders" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/login" access="isAnonymous()"/>
         <!--<intercept-url pattern="/add*" access="ROLE_USER"/>-->
-        <!--<intercept-url pattern="/delete/*" access="ROLE_ADMIN"/>-->
+        <intercept-url pattern="/admin/*" access="hasRole('ROLE_ADMIN')"/>
         <form-login
-                login-page="/login.jsp"
+                login-page="/login"
                 login-processing-url="/login/process"
                 password-parameter="password"
                 username-parameter="username"
                 authentication-failure-url="/login?error=true"/>
         <logout logout-url="/logout" logout-success-url="/"/>
         <anonymous username="guest" granted-authority="ROLE_ANONYMOUS"/>
+
         <!--<remember-me/>-->
     </http>
 

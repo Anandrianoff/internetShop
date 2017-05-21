@@ -21,12 +21,25 @@
         <tbody>
             <c:forEach items="${users}" var="user">
                 <tr>
-                    <td>${user.id}
-                        <button onclick="remove(${user.id}, ${token})" style="color: red">X</button>
+                    <td>
+                        <form action="/admin/removeUser" method="post">
+                            ${user.id}
+                            <input type="hidden" name="id" value="${user.id}">
+                            <input type="hidden" name="<c:out value="${_csrf.parameterName}"/>" value="<c:out value="${_csrf.token}"/>">
+                                <button onclick="submit" style="color: red">X</button>
+                        </form>
+                        <%--<button onclick="remove(${user.id}, ${token})" style="color: red">X</button>--%>
                     </td>
                     <td>${user.username}</td>
                     <td>${user.email}</td>
-                    <td>${user.emailConfirmed} <button onclick="unconfirm(${user.id})"></button></td>
+                    <td>
+                        <form action="/admin/changeConfirmation" method="post">
+                            ${user.emailConfirmed}
+                            <input type="hidden" name="id" value="${user.id}">
+                            <input type="hidden" name="<c:out value="${_csrf.parameterName}"/>" value="<c:out value="${_csrf.token}"/>">
+                            <button type="submit">change</button>
+                        </form>
+                    </td>
                     <td>${user.orders.size()}</td>
                 </tr>
             </c:forEach>
@@ -37,13 +50,6 @@
     <script type="text/javascript">
         function unconfirm(id, token) {
             $.post('ajax.php', {'id':id})
-//                    function(data) {
-//                        $('#result').html(data);
-//                    });
-
-        }
-        function remove(id) {
-            $.post('/admin/removeUser', {'id':id})
 //                    function(data) {
 //                        $('#result').html(data);
 //                    });
