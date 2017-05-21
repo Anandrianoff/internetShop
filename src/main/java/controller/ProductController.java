@@ -119,7 +119,7 @@ public class ProductController {
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Order order = new Order();
         order.setUser(currentUser);
-        order.setStatus(OrderStatus.ORDER_SET);
+        order.setStatus(OrderStatus.ORDER_DONE);
         order = orderService.saveNewOrder(order);
         for (ProductCounter pc : cart){
             ProductInOrder productInOrder = new ProductInOrder();
